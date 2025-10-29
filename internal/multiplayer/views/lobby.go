@@ -23,6 +23,6 @@ func (m *LobbyModel) View() string {
 	return "Lobby"
 }
 
-func NewLobbyModel(cfg *config.Config) (*LobbyModel, error) {
+func NewLobbyModel(_ *config.Config) (*LobbyModel, error) {
 	return &LobbyModel{}, nil
 }
