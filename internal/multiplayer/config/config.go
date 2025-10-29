@@ -1,6 +1,6 @@
 package config
 
-// Config for the multiplayer mode
+// Config for the multiplayer mode.
 type Config struct {
 }
 

@@ -37,3 +37,19 @@ func SwitchPageCmd(target Page) tea.Cmd {
 		}
 	}
 }
+
+// Sizable is an interface that can be resized by its parent.
+type Sizable interface {
+	SetSize(width, height int)
+}
+
+// SizeableImpl is a default implementation of Sizable. It changes its width and height.
+type SizeableImpl struct {
+	Width  int
+	Height int
+}
+
+func (s *SizeableImpl) SetSize(width, height int) {
+	s.Width = width
+	s.Height = height
+}

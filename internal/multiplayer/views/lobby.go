@@ -10,17 +10,17 @@ type LobbyModel struct {
 
 // Init implements tea.Model.
 func (m *LobbyModel) Init() tea.Cmd {
-	panic("unimplemented")
+	return nil
 }
 
 // Update implements tea.Model.
 func (m *LobbyModel) Update(tea.Msg) (tea.Model, tea.Cmd) {
-	panic("unimplemented")
+	return m, nil
 }
 
 // View implements tea.Model.
 func (m *LobbyModel) View() string {
-	panic("unimplemented")
+	return "Lobby"
 }
 
 func NewLobbyModel(cfg *config.Config) (*LobbyModel, error) {

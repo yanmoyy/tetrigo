@@ -81,6 +81,9 @@ func (m *Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case tea.WindowSizeMsg:
 		m.width = msg.Width
 		m.height = msg.Height
+		if sizable, ok := m.child.(page.Sizable); ok {
+			sizable.SetSize(m.width, m.height)
+		}
 	}
 
 	var cmd tea.Cmd
@@ -94,7 +97,7 @@ func (m *Model) setPage(target page.Page) error {
 
 	switch target {
 	case page.PageMain:
-		child, err = views.NewMainModel(m.cfg)
+		child = views.NewMainModel()
 	case page.PageLobby:
 		child, err = views.NewLobbyModel(m.cfg)
 	case page.PageGame:

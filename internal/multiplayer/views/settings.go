@@ -10,19 +10,19 @@ type SettingsModel struct {
 
 // Init implements tea.Model.
 func (m *SettingsModel) Init() tea.Cmd {
-	panic("unimplemented")
+	return nil
 }
 
 // Update implements tea.Model.
 func (m *SettingsModel) Update(tea.Msg) (tea.Model, tea.Cmd) {
-	panic("unimplemented")
+	return m, nil
 }
 
 // View implements tea.Model.
 func (m *SettingsModel) View() string {
-	panic("unimplemented")
+	return "Settings"
 }
 
-func NewSettingsModel(cfg *config.Config) (*SettingsModel, error) {
+func NewSettingsModel(_ *config.Config) (*SettingsModel, error) {
 	return &SettingsModel{}, nil
 }

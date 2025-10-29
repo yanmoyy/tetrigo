@@ -10,19 +10,19 @@ type GameModel struct {
 
 // Init implements tea.Model.
 func (m *GameModel) Init() tea.Cmd {
-	panic("unimplemented")
+	return nil
 }
 
 // Update implements tea.Model.
 func (m *GameModel) Update(tea.Msg) (tea.Model, tea.Cmd) {
-	panic("unimplemented")
+	return m, nil
 }
 
 // View implements tea.Model.
 func (m *GameModel) View() string {
-	panic("unimplemented")
+	return "Game"
 }
 
-func NewGameModel(cfg *config.Config) (*GameModel, error) {
+func NewGameModel(_ *config.Config) (*GameModel, error) {
 	return &GameModel{}, nil
 }
