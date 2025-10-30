@@ -121,6 +121,9 @@ func (m *Model) initChild() tea.Cmd {
 	var cmds []tea.Cmd
 	cmd := m.child.Init()
 	cmds = append(cmds, cmd)
+	if sizable, ok := m.child.(page.Sizable); ok {
+		sizable.SetSize(m.width, m.height)
+	}
 	m.child, cmd = m.child.Update(tea.WindowSizeMsg{Width: m.width, Height: m.height})
 	cmds = append(cmds, cmd)
 	return tea.Batch(cmds...)

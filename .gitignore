@@ -171,3 +171,5 @@ cover.out
 dist/
 # Nix build
 result
+# Log files
+debug.log

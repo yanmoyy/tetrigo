@@ -17,6 +17,8 @@ func main() {
 }
 
 func launchStarter() error {
+	// TODO: use additional arguments to go directly to the specified page.
+
 	cfg, err := config.NewConfig()
 	if err != nil {
 		return fmt.Errorf("getting config: %w", err)
@@ -27,6 +29,12 @@ func launchStarter() error {
 	)
 	if err != nil {
 		return fmt.Errorf("creating starter model: %w", err)
+	}
+
+	// TODO: Delete this once we have a proper logging system.
+	_, err = tea.LogToFile("debug.log", "debug")
+	if err != nil {
+		return fmt.Errorf("opening debug log file: %w", err)
 	}
 
 	exitModel, err := tea.NewProgram(model, tea.WithAltScreen()).Run()

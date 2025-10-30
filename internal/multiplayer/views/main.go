@@ -98,7 +98,13 @@ func selectionButton(label string, selected bool) string {
 		textColor = colors.Violet
 		borderColor = colors.Violet
 	}
-	return widget.NewButton(buttonWidth, buttonHeight, textColor, borderColor, label).View()
+	return widget.NewButton().
+		Text(label).
+		TextColor(textColor).
+		BorderColor(borderColor).
+		Width(buttonWidth).
+		Height(buttonHeight).
+		View()
 }
 
 func (m *MainModel) Up() tea.Cmd {

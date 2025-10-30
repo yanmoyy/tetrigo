@@ -1,6 +1,9 @@
 package widget
 
-import "github.com/charmbracelet/lipgloss"
+import (
+	"github.com/Broderick-Westrope/tetrigo/internal/multiplayer/colors"
+	"github.com/charmbracelet/lipgloss"
+)
 
 // Button is a button that has a border and a text.
 
@@ -15,14 +18,39 @@ type Button struct {
 	text        string
 }
 
-func NewButton(width, height int, textColor, borderColor lipgloss.Color, text string) *Button {
+type ButtonOpt func(*Button)
+
+func NewButton() *Button {
 	return &Button{
-		width:       width,
-		height:      height,
-		textColor:   textColor,
-		borderColor: borderColor,
-		text:        text,
+		textColor:   colors.White, // default color
+		borderColor: colors.White,
+		text:        "",
 	}
+}
+
+func (b *Button) Text(text string) *Button {
+	b.text = text
+	return b
+}
+
+func (b *Button) TextColor(color lipgloss.Color) *Button {
+	b.textColor = color
+	return b
+}
+
+func (b *Button) BorderColor(color lipgloss.Color) *Button {
+	b.borderColor = color
+	return b
+}
+
+func (b *Button) Width(width int) *Button {
+	b.width = width
+	return b
+}
+
+func (b *Button) Height(height int) *Button {
+	b.height = height
+	return b
 }
 
 // View implements Widget.
