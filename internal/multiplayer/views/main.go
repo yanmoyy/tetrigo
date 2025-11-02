@@ -3,7 +3,6 @@ package views
 import (
 	"github.com/Broderick-Westrope/tetrigo/internal/multiplayer/colors"
 	"github.com/Broderick-Westrope/tetrigo/internal/multiplayer/layout"
-	"github.com/Broderick-Westrope/tetrigo/internal/multiplayer/page"
 	"github.com/Broderick-Westrope/tetrigo/internal/multiplayer/widget"
 	"github.com/charmbracelet/bubbles/key"
 	tea "github.com/charmbracelet/bubbletea"
@@ -14,7 +13,6 @@ type mainSelection int
 
 const (
 	msStartGame mainSelection = iota
-	msSettings
 	msExit
 )
 
@@ -22,8 +20,6 @@ func (s mainSelection) String() string {
 	switch s {
 	case msStartGame:
 		return "Start Game"
-	case msSettings:
-		return "Settings"
 	case msExit:
 		return "Exit"
 	}
@@ -31,10 +27,10 @@ func (s mainSelection) String() string {
 }
 
 var _ tea.Model = &MainModel{}
-var _ page.Sizable = &MainModel{}
+var _ Sizable = &MainModel{}
 
 type MainModel struct {
-	page.SizeableImpl
+	SizeableImpl
 
 	selected mainSelection
 	keys     *mainKeyMap
@@ -79,8 +75,6 @@ func (m *MainModel) View() string {
 		"The Multiplayer Mode is currently under development...",
 		layout.GapV(2),
 		selectionButton(msStartGame.String(), m.selected == msStartGame),
-		layout.GapV(1),
-		selectionButton(msSettings.String(), m.selected == msSettings),
 		layout.GapV(1),
 		selectionButton(msExit.String(), m.selected == msExit),
 		layout.GapV(1),
@@ -128,9 +122,7 @@ func (m *MainModel) Down() tea.Cmd {
 func (m *MainModel) Enter() tea.Cmd {
 	switch m.selected {
 	case msStartGame:
-		return page.SwitchPageCmd(page.PageLobby)
-	case msSettings:
-		return page.SwitchPageCmd(page.PageSettings)
+		return SwitchPageCmd(ViewLobby)
 	case msExit:
 		return tea.Quit
 	}

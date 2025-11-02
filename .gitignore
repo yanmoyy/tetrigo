@@ -173,3 +173,5 @@ dist/
 result
 # Log files
 debug.log
+# SSH keys
+.ssh/

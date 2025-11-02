@@ -1,36 +1,46 @@
-package page
+package views
 
 import tea "github.com/charmbracelet/bubbletea"
 
-type Page int
+type View int
 
 const (
-	PageMain Page = iota
-	PageLobby
-	PageGame
-	PageSettings
+	ViewMain View = iota
+	ViewLobby
+	ViewP2P
 )
 
-func (p Page) String() string {
+func (p View) String() string {
 	switch p {
-	case PageMain:
+	case ViewMain:
 		return "Main"
-	case PageLobby:
+	case ViewLobby:
 		return "Lobby"
-	case PageGame:
-		return "Game"
-	case PageSettings:
-		return "Settings"
+	case ViewP2P:
+		return "P2P"
 	default:
 		return "Unknown"
 	}
 }
 
-type SwitchPageMsg struct {
-	Target Page
+func GetViewModel(page View, sessionID string) tea.Model {
+	var view tea.Model
+	switch page {
+	case ViewMain:
+		view = NewMainModel()
+	case ViewLobby:
+		view = NewLobbyModel(sessionID)
+	case ViewP2P:
+		view = NewP2PModel()
+	}
+	return view
 }
 
-func SwitchPageCmd(target Page) tea.Cmd {
+type SwitchPageMsg struct {
+	Target View
+}
+
+func SwitchPageCmd(target View) tea.Cmd {
 	return func() tea.Msg {
 		return SwitchPageMsg{
 			Target: target,
@@ -52,4 +62,8 @@ type SizeableImpl struct {
 func (s *SizeableImpl) SetSize(width, height int) {
 	s.Width = width
 	s.Height = height
+}
+
+type SessionIDSetter interface {
+	SetSessionID(string)
 }

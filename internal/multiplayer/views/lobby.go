@@ -5,9 +5,7 @@ import (
 	"time"
 
 	"github.com/Broderick-Westrope/tetrigo/internal/multiplayer/colors"
-	"github.com/Broderick-Westrope/tetrigo/internal/multiplayer/config"
 	"github.com/Broderick-Westrope/tetrigo/internal/multiplayer/layout"
-	"github.com/Broderick-Westrope/tetrigo/internal/multiplayer/page"
 	"github.com/Broderick-Westrope/tetrigo/internal/multiplayer/validators"
 	"github.com/charmbracelet/bubbles/key"
 	"github.com/charmbracelet/bubbles/spinner"
@@ -26,10 +24,10 @@ const (
 )
 
 var _ tea.Model = &LobbyModel{}
-var _ page.Sizable = &LobbyModel{}
+var _ Sizable = &LobbyModel{}
 
 type LobbyModel struct {
-	page.SizeableImpl
+	SizeableImpl
 
 	form    *huh.Form
 	spinner spinner.Model
@@ -42,21 +40,19 @@ type LobbyModel struct {
 }
 
 type lobbyFormData struct {
-	username string
+	nickname string
 	isHost   bool
-	hostAddr string
-	port     string
+	roomID   string
 	password string
 }
 
 type startConnectionMsg struct{}
 
-func defaultLobbyFormData() *lobbyFormData {
+func defaultLobbyFormData(sessionId string) *lobbyFormData {
 	return &lobbyFormData{
-		username: "tetrigo",
 		isHost:   true,
-		hostAddr: "127.0.0.1", // Default to localhost
-		port:     "22",        // Default to SSH
+		nickname: sessionId,
+		roomID:   sessionId,
 	}
 }
 
@@ -67,8 +63,8 @@ func defaultSpinner() spinner.Model {
 	return spn
 }
 
-func NewLobbyModel(_ *config.Config) (*LobbyModel, error) {
-	formData := defaultLobbyFormData()
+func NewLobbyModel(sessionId string) *LobbyModel {
+	formData := defaultLobbyFormData(sessionId)
 	keys := defaultLobbyKeyMap()
 	spinner := defaultSpinner()
 
@@ -82,21 +78,17 @@ func NewLobbyModel(_ *config.Config) (*LobbyModel, error) {
 					Negative("Join").
 					Value(&formData.isHost),
 				huh.NewInput().
-					Value(&formData.username).
-					Title("Username (Max 20):").
+					Value(&formData.nickname).
+					Title("NickName").
+					Description("Nickname for game").
 					CharLimit(20).
-					Validate(validators.Username()),
+					Validate(validators.Nickname()),
 				huh.NewInput().
-					Value(&formData.hostAddr).
-					Title("Host Address:").
-					Description("IPv4 or IPv6 address").
-					CharLimit(50).
-					Validate(validators.HostAddr()),
-				huh.NewInput().
-					Value(&formData.port).
-					Title("Port:").
-					CharLimit(5).
-					Validate(validators.Port()),
+					Value(&formData.roomID).
+					Title("RoomID").
+					Description("You need to make an unique RoomID for hosting").
+					CharLimit(30).
+					Validate(validators.RoomID()),
 				huh.NewInput().
 					Value(&formData.password).
 					Title("Password (Max 20):").
@@ -107,7 +99,7 @@ func NewLobbyModel(_ *config.Config) (*LobbyModel, error) {
 		).WithKeyMap(keys.formKeys),
 		keys:    keys,
 		spinner: spinner,
-	}, nil
+	}
 }
 
 // Init implements tea.Model.
@@ -127,7 +119,7 @@ func (m *LobbyModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
 		if key.Matches(msg, m.keys.Exit) {
-			return m, page.SwitchPageCmd(page.PageMain)
+			return m, SwitchPageCmd(ViewMain)
 		}
 	case startConnectionMsg:
 		cmds := []tea.Cmd{m.spinner.Tick, m.startConnection()}
@@ -166,7 +158,7 @@ func (m *LobbyModel) startConnection() tea.Cmd {
 		time.Sleep(time.Second * 3)
 		m.connectionStatus = csSuccess
 		time.Sleep(time.Second * 1)
-		return page.SwitchPageMsg{Target: page.PageGame}
+		return SwitchPageMsg{Target: ViewP2P}
 	}
 }
 
@@ -200,7 +192,7 @@ func (m *LobbyModel) connectionView() string {
 		}
 		return lipgloss.JoinVertical(
 			lipgloss.Center,
-			fmt.Sprintf("%s [%s:%s]", desc, m.formData.hostAddr, m.formData.port),
+			fmt.Sprintf("%s [%s]", desc, m.formData.roomID),
 			layout.GapV(1),
 			m.spinner.View(),
 		)

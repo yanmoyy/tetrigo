@@ -8,7 +8,7 @@ import (
 
 type ValidateFunc func(string) error
 
-func Username() ValidateFunc {
+func Nickname() ValidateFunc {
 	return func(s string) error {
 		if len(s) == 0 {
 			return errors.New("empty username not allowed")
@@ -17,7 +17,7 @@ func Username() ValidateFunc {
 	}
 }
 
-func HostAddr() ValidateFunc {
+func RoomID() ValidateFunc {
 	return func(s string) error {
 		if len(s) == 0 {
 			return errors.New("empty host address not allowed")
